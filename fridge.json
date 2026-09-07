@@ -1,14 +1,10 @@
 [
   {
-    "name": "Хлеб",
-    "count": 2
+    "name": "q",
+    "count": 11
   },
   {
-    "name": "Молоко",
-    "count": 2.5
-  },
-  {
-    "name": "Сыр",
-    "count": 0.44
+    "name": "z",
+    "count": -1.1
   }
 ]
