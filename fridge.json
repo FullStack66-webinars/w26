@@ -1,10 +1,8 @@
 [
   {
     "name": "aaa",
-    "count": 3.3
-  },
-  {
-    "name": "zzz",
-    "count": 0.22
+    "count": 12.3,
+    "price": 10.1,
+    "expDate": "1010-10-10"
   }
 ]
