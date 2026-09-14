@@ -1,3 +1,7 @@
+// npm install --save-dev jest
+// "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+//  apiKey: process.env.GEMINI_API_KEY
+
 import axios from "axios";
 
 const USERS_URL = "https://jsonplaceholder.typicode.com/users";
