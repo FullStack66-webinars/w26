@@ -6,7 +6,11 @@
 
 async function returnWeather(latitude, longitude) {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
-  const response = await fetch(url);
+  const response = await fetch(url)
+
+  if (!response.ok) {
+      throw  new Error(response.statusText);
+  }
   const dataObj = await response.json(); // Object
   return dataObj ;
 }
@@ -68,6 +72,7 @@ async function mainAxios(latitude, longitude) {
     console.log(weatherDataAxios.data);  // Object получаем через data
     return weatherDataAxios.data;
 }
+
 
 
 const weatherDataAxios = await mainAxios(44.49, 20.27);  // Object

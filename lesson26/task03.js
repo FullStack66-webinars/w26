@@ -1,32 +1,24 @@
-// https://jsonplaceholder.typicode.com/posts
 
-//https://jsonplaceholder.typicode.com/users
-
-
-async function returnUser(id){
-    const response = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`);
-    const userData = await response.json();
-    return userData;
+async function getUsers(){
+    const response = await fetch(`https://jsonplaceholder.typicode.com/users`);
+    return response.json();
 }
 
-const userId = 1; // 1..10
-const userData = await returnUser(userId);
-console.log(userData); // Object
-
-const userDataJson = JSON.stringify(userData, null, 2);
-console.log(userDataJson); // String
+const users = await getUsers();
+console.log(users);
 
 const people = [];
-for (let i = 1; i <= 10; i++) {
-    const userData = await returnUser(i);
+for (const user of users) {
     let myObj={
-        id: userData.id,
-        name: userData.name,
-        latitude: userData.address.geo.lat,
-        longitude: userData.address.geo.lng
+        id: user.id,
+        name: user.name,
+        latitude: user?.address?.geo?.lat ?? 0,
+        longitude: user?.address?.geo?.lng ?? 0
     };
     people.push(myObj);
 }
+
+console.log("===============PEOPLE=====================")
 console.log(people); // Array of person objects   
 
 /*
@@ -43,3 +35,23 @@ HW_26_TEXT
  6.axios (для одного из запросов).
 
 */
+//let maxTemperature = -Infinity;
+
+// people.sort((a,b) => {
+//     b.temperature - a.temperature;
+// })
+
+const maxTemperature = Math.max(...people.map(p => p.temperature));
+
+const hottest = people.find(p => p.temperature > maxTemperature);
+
+const promises = users.map(async user => {
+    const weather = await getWeather(...);
+    return weather;
+})
+
+const results = await Promise.all(promises);
+
+const allResults = await Promise.allSettled(promises);
+
+//[{ status: "fulfilled", value:...}, {status: "rejected", reason:

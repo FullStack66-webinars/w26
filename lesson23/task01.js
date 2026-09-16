@@ -1,5 +1,5 @@
-let password="12345";
-let userPassword = "12345";
+let password="12345"; //NEVER!!!!!!!!!!!!!!!!!
+let userPassword = "12345"; //NEVER!!!!!!!!!!!!!!!!!
 if(password===userPassword){
     console.log("Пароль верный");
 } else {

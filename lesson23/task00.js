@@ -1,134 +1,45 @@
-// Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-
-// npm init
-
-// npm install axios
-
-
-
-//     https://api.open-meteo.com/v1/forecast?latitude=44.49&longitude=20.27&current_weather=true
-
-
-// "type": "commonjs",  ->   "type": "module",
-
-// Example of commonjs module export and import
-// const {validateEcmascriptText} = require("./service/validate.js");
-// module.exports = {validateEcmascriptText};
-
-
-// =====================================63-23=
-
-// https://jsonplaceholder.typicode.com/posts
-
-//==========================================
-
-// https://aistudio.google.com/api-keys
-
-//  ???????????????????????????????????????????????????????
-
-// npm install @google/genai
-//===================================================
-/*
-1.
-Параметры → Система → О системе → Дополнительные параметры системы → Переменные среды
-Добавляйте ключ в раздел Переменные пользователя, а не 
-Системные переменные — права администратора не нужны, и ключ будет доступен 
-только вашей учётной записи.
-
-2.
-Powershell
-
-[Environment]::SetEnvironmentVariable(
-  "GEMINI_API_KEY",
-  "ваш_настоящий_ключ",
-  "User"
-)
-
-$env:GEMINI_API_KEY
-if ($env:GEMINI_API_KEY) { "Ключ найден" } else { "Ключ не найден" }
-
-node -e "console.log(process.env.GEMINI_API_KEY ? 'Ключ найден' : 'Ключ не найден')"
-
-const apiKey = process.env.GEMINI_API_KEY;
-
-`${apiKey}`
-*/
-
-
-/*
-### 2
-a.
-Создай функцию-конструктор объектов Account(iban,owner, balance), 
-которая возвращает объект с:
-- номер счета (iban)
-- именем владельца (owner)
-- балансом (balance)  
-методами:
-- **deposit**(amount) — пополнение счёта
-- **withdraw**(amount) — снятие денег (если хватает баланса)
-- **getBalance**() — вывод текущего баланса
-
-Создайте несколько объектов счетов. Создайте массив из
-счетов. Выведите информацию о всех счетах в консоль
-
-b. напишите функцию, transfer, которая получает два счета, 
-и выполняет перевод между счетами вызывая методы deposit и
-withdraw соответственно. 
-
-с. (чуть сложнее)
- В качестве результата функции transaer, в случае успешной 
-операции, должен cформироваться объект: 
-- account1 (счет списания), 
-- account2 (счет зачисления),
-- amount (сумма)
-- transactionInfo() (функция, которая выводит информацию о транзакции)  
-
-Если транзакция прошла неуспешно, объект должен содержать 
-еще и поле error c информацией об ошибке. Естественно,
-transactionInfo() должна в этом случае выводить информацию 
-о неуспешной транзакции. В случае, если транзакция успешна, 
-поля error не должно быть.
-
-*/
-
 
 function Account(iban, owner, balance){
-    this.iban = iban,
-    this.owner = owner,
-    this.balance = balance,
-    this.getBalance = function(){return this.balance;}
+    this.iban = iban;
+    this.owner = owner;
+    this.balance = balance;
+    this.getBalance = function(){return this.balance;};
+    //typeof NaN
     this.deposit = function(amount){
-        if( typeof(amount)!=='number' || amount<=0 ){
+        if( typeof(amount)!=='number' || amount<=0 || !Number.isFinite(amount)){
             return false;
         } else {
             this.balance+=amount;
             return true;
         }
-    }
+    };
     this.withdraw = function(amount){
-        if( typeof(amount)!=='number' || amount<=0 || amount > this.balance ){
+        if( typeof(amount)!=='number' || amount<=0 || !Number.isFinite(amount)){
             return false;
-        } else {
-            this.balance-=amount;
-            return true;
         }
+        if (this.balance<amount){
+            return false;
+        }
+
+        this.balance-=amount;
+        return true;
+
     }
 };
 
 function transfer(acc1,acc2, amount){
-    if(acc1.withdraw(amount)){
-        if(acc2.deposit(amount)){
-            // успех
-            return new Transaction(acc1,acc2,amount);     
-        } else {
-            acc1.deposit(amount)
-            // не успех не смогли зачислить
-            return new Transaction(acc1,acc2,amount, "не смогли зачислить");
-        } 
-    } else {
-        // не успех не смогли списать
+    //Step 1 - withdraw
+    if(!acc1.withdraw(amount)) {
+        //fail
         return new Transaction(acc1,acc2,amount,"не смогли списать");
     }
+    //Step 2 - deposit
+    if(!acc2.deposit(amount)){
+            // fail
+            return new Transaction(acc1,acc2,amount, "не смогли зачислить")
+        }
+    // Step 3 - success
+    return new Transaction(acc1,acc2,amount);
 
 }
 
@@ -142,27 +53,43 @@ function Transaction(acc1,acc2,amount,error ){
     }
 
     this.transactionInfo = function(){
-        let iban1=this.account1.iban || "счет не определен";
-        let iban2=this.account2.iban || "счет не определен";
-        let msg = ("error" in this) ? ` error ${this.error}`:"";
-        return `Перевод с ${iban1} на ${iban2} на сумму ${amount}${msg}`
-    }
+        const errorMessage = ("error" in this) ? ` error ${this.error}`:"";
+        return (`Перевод со счета ${this.account1.iban} на ${this.account2.iban} на сумму ${this.amount}.`
+            + errorMessage);
+
+    };
 
 
 }
 
 
-let account1 = new Account("1111","jack",1000);
-let account2 = new Account("2222","ann",1000);
+const account1 = new Account("DE893788777343","jack",1000);
+const account2 = new Account("FR893799777343","ann",1500);
+const account3 = new Account("GB893790777343","Petya",700);
+const account4 = new Account("IL893777677343","Olga",900);
  
 //console.log(account1.getBalance());
 //console.log(account1.withdraw("777"));
 
-console.log(account1);
-console.log(account2);
-let res = transfer(account1,account2, 500);
-console.log("1>>>>>>>>>>",res);
-console.log("2>>>>>>>>>>",res.transactionInfo());
-console.log(account1);
-console.log(account2);
+const accounts = [account1,account2,account3,account4];
+function printAccounts(accounts){
+    console.log("====================Accounts====================")
+    for(let i=0; i<accounts.length; i++){
+        console.log(`Account ${i+1}`);
+        console.log(`   iban: ${accounts[i].iban} owner: ${accounts[i].owner} balance: ${accounts[i].getBalance()}`)
+        console.log("-----------------")
+    }
+}
 
+printAccounts(accounts);
+doNothing();
+const transaction1 = transfer(account1,account2, 500);
+console.log(transaction1.transactionInfo());
+console.log(account1.getBalance(), account2.getBalance());
+
+const transaction2 = transfer(account3,account1, 1000);
+console.log(transaction2.transactionInfo());
+console.log(account3.getBalance(), account1.getBalance());
+console.log(transfer(account4,account2, -1000).transactionInfo());
+console.log(transfer(account4,account2, NaN).transactionInfo());
+console.log(transfer(account4,account2, "1000").transactionInfo());
