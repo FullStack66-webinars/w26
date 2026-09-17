@@ -16,34 +16,77 @@ async function getTemperature(latitude, longitude) {
     return response.data.current_weather.temperature;
 }
 
+async function usersWithWeather(users) {
+    return Promise.all(
+        users.map(async user => {
+            const latitude = Number(user.address.geo.lat);
+            const longitude = Number(user.address.geo.lng);
+
+            if (
+                !Number.isFinite(latitude) ||
+                !Number.isFinite(longitude)
+            ) {
+                console.warn(
+                    `Некорректные координаты: ${user.name}`
+                );
+
+                return null;
+            }
+
+            try {
+                const temperature = await getTemperature(
+                    latitude,
+                    longitude
+                );
+
+                return {
+                    name: user.name,
+                    phone: user.phone,
+                    latitude,
+                    longitude,
+                    temperature
+                };
+
+            } catch (error) {
+                console.warn(
+                    `Не удалось получить погоду для ${user.name}`
+                );
+
+                return null;
+            }
+        })
+    );
+}
+
 async function main() {
     try {
         const users = await getUsers();
-        let hottestUser = null;
-        let maxTemperature = -Infinity;
-        for (const user of users) {
-            const latitude = Number(user.address.geo.lat);
-            const longitude = Number(user.address.geo.lng);
-            if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
-                console.warn(`Некорректные координаты: ${user.name}`);
-                continue;
-            }
-            const temperature = await getTemperature(latitude, longitude);
-            if (temperature > maxTemperature) {
-                maxTemperature = temperature;
-                hottestUser = user;
-            }
-        }
-        if (!hottestUser) {
+        const usersWithTemp = await usersWithWeather(users);
+        const validUsers = usersWithTemp.filter(
+            user => user !== null
+        );
+
+        if (validUsers.length === 0) {
             console.log("Нет данных для сравнения");
             return;
         }
+        const hottestUser = validUsers.reduce(
+            (hottest, current) =>
+                current.temperature > hottest.temperature
+                    ? current
+                    : hottest
+        );
+
         console.log(`Имя: ${hottestUser.name}`);
         console.log(`Телефон: ${hottestUser.phone}`);
-        console.log(`Температура: ${maxTemperature}°C`);
+        console.log(
+            `Температура: ${hottestUser.temperature}°C`
+        );
+
     } catch (error) {
         console.error("Ошибка:", error.message);
     }
 }
+
 
 main();
