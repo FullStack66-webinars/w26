@@ -1,6 +1,6 @@
 import {ROLES} from "./config.js";
 
-export function createBasePromptByRole(user){
+export function createBasePromptByRole(user) {
     if (user.role === ROLES.ADMIN) {
         return `
         Ты - квалифицированный повар, определяющий ингредиенты
@@ -36,4 +36,23 @@ export function createBasePromptByRole(user){
     }
 
     throw new Error(`Access denied ${user.role}`);
+}
+
+export function formatProductsForPrompt(products) {
+    return products.map(product => ` ${product.name}: ${product.count}`).join('\n');
+}
+
+export function createPrompt(basePrompt, dishTitle, products) {
+    if(!dishTitle.trim()){
+        throw new Error(`The dish title is required`);
+    }
+
+    if(!Array.isArray(products)) {
+        throw new Error(`The product must be an array of ${products}`);
+    }
+
+    const productText = formatProductsForPrompt(products);
+    return `
+    ${basePrompt} Желаемое блюдо: ${dishTitle} Продукты в холодильнике ${productText}`
+
 }
