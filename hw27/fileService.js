@@ -4,3 +4,5 @@ export async function readFromJsonFile(filePath) {
     const fileData = await readFile(filePath, "utf-8");
     return JSON.parse(fileData);
 }
+//C:\projects\node-js\hw27\fridge.json
+//server/project/hw27/fridge.json
