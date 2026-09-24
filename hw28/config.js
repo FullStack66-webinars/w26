@@ -3,6 +3,7 @@ import {GEMINI_API_KEY} from "./secret.js";
 const ROLES = {
     USER: 'USER',
     ADMIN: 'ADMIN',
+    GUEST: "GUEST"
 };
 
 const AI_MODEL = "gemini-3-flash-preview";

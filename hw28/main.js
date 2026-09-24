@@ -3,7 +3,7 @@ import {
 } from "./fileService.js";
 
 import {
-    getUserByName
+    getAuthenticatedUser
 } from "./authService.js";
 
 import {
@@ -100,18 +100,12 @@ async function searchDish(
 
 
     const authenticatedUser =
-        getUserByName(
+        getAuthenticatedUser(
             users,
             userName
         );
 
 
-    if (!authenticatedUser) {
-
-        throw new Error(
-            "User not found"
-        );
-    }
 
 
     const products =

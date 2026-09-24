@@ -1,6 +1,7 @@
 const ROLES = {
     USER: 'USER',
     ADMIN: 'ADMIN',
+    GUEST: "GUEST"
 };
 
 const AI_MODEL = "gemini-3.5-flash";
