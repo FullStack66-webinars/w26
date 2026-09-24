@@ -1,23 +1,23 @@
 import {
-        readFromJsonFile
+    readFromJsonFile
 } from "./fileService.js";
 
 import {
-        getUserByName
+    getUserByName
 } from "./authService.js";
 
 import {
-        FRIDGE_FILE,
-        USERS_FILE
+    FRIDGE_FILE,
+    USERS_FILE
 } from "./config.js";
 
 import {
-        createBasePromptByRole,
-        createPrompt
+    createBasePromptByRole,
+    createPrompt
 } from "./promptService.js";
 
 import {
-        askAi
+    askAi
 } from "./aiService.js";
 
 
@@ -41,7 +41,6 @@ const result =
         "result"
     );
 
-
 const errorModal =
     document.getElementById(
         "errorModal"
@@ -58,136 +57,157 @@ const closeModal =
     );
 
 
+function validateInput(
+    userName,
+    dishTitle
+) {
+
+    if (!userName) {
+
+        throw new Error(
+            "User name is required"
+        );
+    }
+
+
+    if (!dishTitle) {
+
+        throw new Error(
+            "Dish title is required"
+        );
+    }
+}
+
+
 function showError(message) {
 
-        errorMessage.textContent =
-            message;
+    errorMessage.textContent =
+        message;
 
-        errorModal.showModal();
+    errorModal.showModal();
 }
+
+
+async function searchDish(
+    userName,
+    dishTitle
+) {
+
+    const users =
+        await readFromJsonFile(
+            USERS_FILE
+        );
+
+
+    const authenticatedUser =
+        getUserByName(
+            users,
+            userName
+        );
+
+
+    if (!authenticatedUser) {
+
+        throw new Error(
+            "User not found"
+        );
+    }
+
+
+    const products =
+        await readFromJsonFile(
+            FRIDGE_FILE
+        );
+
+
+    const basePrompt =
+        createBasePromptByRole(
+            authenticatedUser
+        );
+
+
+    const prompt =
+        createPrompt(
+            basePrompt,
+            dishTitle,
+            products
+        );
+
+
+    return askAi(
+        prompt
+    );
+}
+
+
+async function handleSearch(event) {
+
+    event.preventDefault();
+
+
+    const userName =
+        userNameInput
+            .value
+            .trim();
+
+
+    const dishTitle =
+        dishTitleInput
+            .value
+            .trim();
+
+
+    try {
+
+        validateInput(
+            userName,
+            dishTitle
+        );
+
+
+        result.textContent =
+            "Получаем ответ...";
+
+
+        const answer =
+            await searchDish(
+                userName,
+                dishTitle
+            );
+
+
+        result.textContent =
+            answer;
+
+
+    } catch (error) {
+
+        console.error(
+            "ERROR:",
+            error
+        );
+
+
+        result.textContent = "";
+
+
+        showError(
+            error.message
+        );
+    }
+}
+
+
+form.addEventListener(
+    "submit",
+    handleSearch
+);
 
 
 closeModal.addEventListener(
     "click",
 
     () => {
-            errorModal.close();
-    }
-);
-
-
-form.addEventListener(
-    "submit",
-
-    async event => {
-
-            event.preventDefault();
-
-
-            const userName =
-                userNameInput
-                    .value
-                    .trim();
-
-            const dishTitle =
-                dishTitleInput
-                    .value
-                    .trim();
-
-
-            try {
-
-                    if (!userName) {
-
-                            throw new Error(
-                                "User name is required"
-                            );
-                    }
-
-
-                    if (!dishTitle) {
-
-                            throw new Error(
-                                "Dish title is required"
-                            );
-                    }
-
-
-                    const users =
-                        await readFromJsonFile(
-                            USERS_FILE
-                        );
-
-
-                    const authenticatedUser =
-                        getUserByName(
-                            users,
-                            userName
-                        );
-
-
-                    if (!authenticatedUser) {
-
-                            throw new Error(
-                                "User not found"
-                            );
-                    }
-
-
-                    const products =
-                        await readFromJsonFile(
-                            FRIDGE_FILE
-                        );
-
-
-                    const basePrompt =
-                        createBasePromptByRole(
-                            authenticatedUser
-                        );
-
-
-                    const prompt =
-                        createPrompt(
-                            basePrompt,
-                            dishTitle,
-                            products
-                        );
-
-
-                    console.log(
-                        "PROMPT:",
-                        prompt
-                    );
-
-
-                    result.textContent =
-                        "Получаем ответ...";
-
-
-                    const answer =
-                        await askAi(
-                            prompt
-                        );
-
-
-                    result.textContent =
-                        answer;
-
-
-            } catch (error) {
-
-                    console.error(
-                        "ERROR:",
-                        error
-                    );
-
-
-                    result.textContent = "";
-
-
-                    showError(
-                        error.message
-                    );
-            }
+        errorModal.close();
     }
 );
