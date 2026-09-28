@@ -45,9 +45,22 @@ function createUI(app) {
 const {form, input, list} = createUI(app);
 console.dir(input);
 
+function handleSubmit(e) {
+    e.preventDefault();
+        const productName = input.value.trim();
+        if (!productName) {
+            return;
+        }
+    console.log(productName);
+    const li = document.createElement("li");
+    li.textContent = productName;
+    list.append(li);
+    input.value = "";
+    input.focus();
+}
+
 //addEventListener
-form.addEventListener("submit", function ()
-{console.log("Форма отправлена");});
+form.addEventListener("submit", handleSubmit);
 
 
 
