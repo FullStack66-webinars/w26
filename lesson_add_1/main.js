@@ -3,7 +3,7 @@ const app = document.querySelector("#app");
 const productsFromList = [
   "Milk", "MILK", "Potato", "Cucumber", "BUTTER", "Butter", "BUTTER", "Butter", ""
 ]
-
+const products =[];
 
 
 function createUI(app) {
@@ -28,45 +28,7 @@ function createUI(app) {
     return {form, input, list,  addFromListButton};
 }
 
-
-
 const {form, input, list, addFromListButton} = createUI(app);
-console.dir(input);
-const products =[];
-
-
-function handleAddProductFromList() {
-    const uniqueProducts = [...new Set(productsFromList)];
-    //new Set === Новый Set, [...new Set(productsFromList)] => новый массив
-    productsFromList.forEach(addProduct)
-    console.log(uniqueProducts);
-}
-
-addFromListButton.addEventListener("click", handleAddProductFromList);
-
-
-// Вариант 1
-//
-// list.addEventListener("click", (event) => {
-//     // console.log("target ",event.target);
-//     // console.log("current target ",event.currentTarget);
-//     if (event.target.tagName !== "LI") {
-//         return
-//
-//         //<li><span>Milk</span> - не сработает
-//     }
-//     event.target.classList.toggle("bought");
-// });
-
-list.addEventListener("click", (event) => {
-    const li = event.target.closest("li");
-    if (!li || !list.contains(li)) {
-        return
-
-    }
-    event.target.classList.toggle("bought");
-});
-
 
 function normalizeProductName(productName) {
     return productName.trim().toLowerCase();
@@ -86,6 +48,26 @@ function addProduct(productName) {
     li.textContent = productName;
     list.append(li);
 }
+
+
+function handleAddProductFromList() {
+    const uniqueProducts = [...new Set(productsFromList)];
+    //new Set === Новый Set, [...new Set(productsFromList)] => новый массив
+    productsFromList.forEach(addProduct)
+    console.log(uniqueProducts);
+}
+
+addFromListButton.addEventListener("click", handleAddProductFromList);
+
+list.addEventListener("click", (event) => {
+    const li = event.target.closest("li");
+    if (!li || !list.contains(li)) {
+        return
+
+    }
+    event.target.classList.toggle("bought");
+});
+
 
 function handleSubmit(e) {
     e.preventDefault();
