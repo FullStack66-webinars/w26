@@ -1,22 +1,4 @@
-// document - объект DOM
-
-//document.getElementById(), document.querySelector(), document.createElement() ... -методы DOM API
-//const app = document.getElementById('app');
 const app = document.querySelector("#app");
-console.log(app);
-console.dir(app);
-// const x = document.getElementById('x');
-// console.log(x); //NULL
-// console.dir(x); //NULL
-//console.log(app === app1);// TRUE!!!!
-// const li = document.createElement("li");
-// li.textContent = "Молоко";
-// app.append(li);
-
-//
-// const li = document.createElement("li");
-// li.textContent = "Молоко";
-// app.appendChild(li) // добавить ОДИН УЗЕЛ в конец объекта app в DOM,
 
 function createUI(app) {
     const title = document.createElement("h1");
@@ -35,12 +17,7 @@ function createUI(app) {
     return {form, input, list};
 }
 
-// const ui = createUI(app);// {form, input, list}
-// const obj = {a,b,c};
-// obj.a = 10;
-// obj.b = 20;
-// obj.c = 30;
-// const {a,b,c} = obj;
+
 
 const {form, input, list} = createUI(app);
 console.dir(input);
