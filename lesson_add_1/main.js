@@ -1,5 +1,11 @@
 const app = document.querySelector("#app");
 
+const productsFromList = [
+  "Milk", "MILK", "Potato", "Cucumber", "BUTTER", "Butter", "BUTTER", "Butter", ""
+]
+
+
+
 function createUI(app) {
     const title = document.createElement("h1");
     title.textContent = "Список продуктов";
@@ -11,16 +17,33 @@ function createUI(app) {
     const button = document.createElement("button");
     button.type = "submit";
     button.textContent = "Добавить";
-    form.append(input, button);
+
+    const addFromListButton = document.createElement("button");
+    addFromListButton.type = "button";
+    addFromListButton.textContent = "Добавить из списка";
+
+    form.append(input, button, addFromListButton);
     const list = document.createElement("ul");
     app.append(form, list);
-    return {form, input, list};
+    return {form, input, list,  addFromListButton};
 }
 
 
 
-const {form, input, list} = createUI(app);
+const {form, input, list, addFromListButton} = createUI(app);
 console.dir(input);
+const products =[];
+
+
+function handleAddProductFromList() {
+    const uniqueProducts = [...new Set(productsFromList)];
+    //new Set === Новый Set, [...new Set(productsFromList)] => новый массив
+    productsFromList.forEach(addProduct)
+    console.log(uniqueProducts);
+}
+
+addFromListButton.addEventListener("click", handleAddProductFromList);
+
 
 // Вариант 1
 //
@@ -44,20 +67,30 @@ list.addEventListener("click", (event) => {
     event.target.classList.toggle("bought");
 });
 
-function handleSubmit(e) {
-    e.preventDefault();
-        const productName = input.value.trim();
-        if (!productName) {
-            return;
-        }
-    console.log(productName);
+
+function normalizeProductName(productName) {
+    return productName.trim().toLowerCase();
+}
+
+function hasProduct(productName) {
+    const normalizedName = normalizeProductName(productName);
+    return products.some(product => normalizeProductName(product) === normalizedName)
+}
+
+function addProduct(productName) {
+    if (hasProduct(productName) || !productName) {
+        return
+    }
+    products.push(productName);
     const li = document.createElement("li");
     li.textContent = productName;
-    // li.addEventListener("click", (event) => {
-    //     li.classList.toggle("bought");
-    // })
-
     list.append(li);
+}
+
+function handleSubmit(e) {
+    e.preventDefault();
+    const productName = input.value.trim();
+    addProduct(productName);
     input.value = "";
     input.focus();
 }
