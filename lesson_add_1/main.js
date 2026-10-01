@@ -22,6 +22,28 @@ function createUI(app) {
 const {form, input, list} = createUI(app);
 console.dir(input);
 
+// Вариант 1
+//
+// list.addEventListener("click", (event) => {
+//     // console.log("target ",event.target);
+//     // console.log("current target ",event.currentTarget);
+//     if (event.target.tagName !== "LI") {
+//         return
+//
+//         //<li><span>Milk</span> - не сработает
+//     }
+//     event.target.classList.toggle("bought");
+// });
+
+list.addEventListener("click", (event) => {
+    const li = event.target.closest("li");
+    if (!li || !list.contains(li)) {
+        return
+
+    }
+    event.target.classList.toggle("bought");
+});
+
 function handleSubmit(e) {
     e.preventDefault();
         const productName = input.value.trim();
@@ -31,6 +53,10 @@ function handleSubmit(e) {
     console.log(productName);
     const li = document.createElement("li");
     li.textContent = productName;
+    // li.addEventListener("click", (event) => {
+    //     li.classList.toggle("bought");
+    // })
+
     list.append(li);
     input.value = "";
     input.focus();
