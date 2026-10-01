@@ -35,6 +35,9 @@ const productsFromListObj = [{
 const p2Obj = [...productsFromListObj];
 console.log(p2Obj);
 
+p2Obj[0].inFridge = false;
+console.log(productsFromListObj)
+
 //Var 3
 
 const productsMap= new Map();
