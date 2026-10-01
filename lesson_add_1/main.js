@@ -30,6 +30,8 @@ function createUI(app) {
 
 const {form, input, list, addFromListButton} = createUI(app);
 
+
+
 function normalizeProductName(productName) {
     return productName.trim().toLowerCase();
 }
