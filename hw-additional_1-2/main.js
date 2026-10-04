@@ -1,3 +1,5 @@
+import {askAi} from "./aiService.js";
+
 const app = document.querySelector("#app");
 
 import { createUI } from "./ui.js";
@@ -33,9 +35,9 @@ function addProduct(productName) {
     if (!cleanName || hasProduct(cleanName)) {
         return
     }
-    products.push(productName);
+    products.push(cleanName);
     const li = document.createElement("li");
-    li.textContent = productName;
+    li.textContent = cleanName;
     list.append(li);
 }
 
@@ -71,11 +73,59 @@ function handleSubmit(e) {
 //addEventListener
 form.addEventListener("submit", handleSubmit);
 
+//dish addEventListener
+dishForm.addEventListener("submit", handleDishSubmit);
 
 
+async function handleDishSubmit(e) {
+    e.preventDefault();
+   const dishTitle = dishInput.value.trim();
+   if (!dishTitle){
+       return;
+   }
+try{
+    const answer = await askAi(dishTitle);
+    console.log(answer);
+    const parsedProducts = parseAiProducts(answer);
+    const missingProducts = getMissingProducts(parsedProducts);
+    renderMissingProducts(missingProducts);
+    dishInput.value = "";
+    dishInput.focus();
+}catch(e) {
+       console.error(e);
+}
 
 
+}
 
+function parseAiProducts(answer){
+    let parsedProducts;
+    try{
+        parsedProducts = JSON.parse(answer);
+    }catch(e){
+        throw  new Error("Gemini returned invalid JSON");
+    }
+    if(!Array.isArray(parsedProducts)) {
+        throw  new Error("Gemini returned not an array");
+    }
+    return parsedProducts;
+}
+
+function getMissingProducts(recipeProducts) {
+    return recipeProducts.filter(product => {
+        return !hasProduct(product)
+    })
+}
+
+function renderMissingProducts(productsArray) {
+    missingProductsList.innerHTML = "";
+
+    productsArray.forEach(product => {
+        const li = document.createElement("li");
+        li.textContent = product;
+        missingProductsList.append(li);
+    })
+}
 
 
 
