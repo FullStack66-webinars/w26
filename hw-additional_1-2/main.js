@@ -1,35 +1,25 @@
 const app = document.querySelector("#app");
 
+import { createUI } from "./ui.js";
+
 const productsFromList = [
   "Milk", "MILK", "Potato", "Cucumber", "BUTTER", "Butter", "BUTTER", "Butter", ""
 ]
 const products =[];
 
+import { createUI } from "./ui.js";
 
-function createUI(app) {
-    const title = document.createElement("h1");
-    title.textContent = "Список продуктов";
-    app.append(title); //добавить в  DOM после элемента,  prepend - перед элементом
-    const form = document.createElement("form");
-    const input = document.createElement("input");
-    input.type = "text"; //НЕ ОБЯЗАТЕЛЬНО - ЭТО ДЕФОЛТНОЕ ЗНАЧЕНИЕ
-    input.placeholder = "Введите продукт";
-    const button = document.createElement("button");
-    button.type = "submit";
-    button.textContent = "Добавить";
+const app = document.querySelector("#app");
 
-    const addFromListButton = document.createElement("button");
-    addFromListButton.type = "button";
-    addFromListButton.textContent = "Добавить из списка";
-
-    form.append(input, button, addFromListButton);
-    const list = document.createElement("ul");
-    app.append(form, list);
-    return {form, input, list,  addFromListButton};
-}
-
-const {form, input, list, addFromListButton} = createUI(app);
-
+const {
+    form,
+    input,
+    list,
+    addFromListButton,
+    dishForm,
+    dishInput,
+    missingProductsList
+} = createUI(app);
 
 
 function normalizeProductName(productName) {
@@ -83,9 +73,6 @@ function handleSubmit(e) {
 
 //addEventListener
 form.addEventListener("submit", handleSubmit);
-
-
-
 
 
 
