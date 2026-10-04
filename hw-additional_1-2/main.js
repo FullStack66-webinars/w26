@@ -7,9 +7,6 @@ const productsFromList = [
 ]
 const products =[];
 
-import { createUI } from "./ui.js";
-
-const app = document.querySelector("#app");
 
 const {
     form,
