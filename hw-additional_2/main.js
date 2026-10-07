@@ -71,7 +71,14 @@ function addProduct(name, category) {
     renderProducts(products, list);
 }
 
+function showAllProducts() {
+    renderProducts(products, list);
+}
 
+filterAllButton.addEventListener(
+    "click",
+    showAllProducts
+);
 
 list.addEventListener("click", (event) => {
     const li = event.target.closest("li");
@@ -97,9 +104,6 @@ function handleSubmit(e) {
 //addEventListener
 form.addEventListener("submit", handleSubmit);
 
-
-
-renderProducts(products, list);
 
 
 
