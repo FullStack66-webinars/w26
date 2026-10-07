@@ -37,21 +37,21 @@ function createUI(app) {
     const input = document.createElement("input");
     input.type = "text"; //НЕ ОБЯЗАТЕЛЬНО - ЭТО ДЕФОЛТНОЕ ЗНАЧЕНИЕ
     input.placeholder = "Введите продукт";
+    const categoryInput = document.createElement("input");
+    categoryInput.type = "text";
+    categoryInput.placeholder = "Категория";
     const button = document.createElement("button");
     button.type = "submit";
     button.textContent = "Добавить";
 
-    const addFromListButton = document.createElement("button");
-    addFromListButton.type = "button";
-    addFromListButton.textContent = "Добавить из списка";
 
-    form.append(input, button, addFromListButton);
+    form.append(input,  categoryInput, button);
     const list = document.createElement("ul");
     app.append(form, list);
-    return {form, input, list,  addFromListButton};
+    return {form, input, list,  categoryInput};
 }
 
-const {form, input, list, addFromListButton} = createUI(app);
+const {form, input, list,  categoryInput, addFromListButton} = createUI(app);
 
 
 
@@ -75,15 +75,6 @@ function addProduct(productName) {
 }
 
 
-function handleAddProductFromList() {
-    const uniqueProducts = [...new Set(productsFromList)];
-    console.log("Before for Each", uniqueProducts);
-    //new Set === Новый Set, [...new Set(productsFromList)] => новый массив
-    productsFromList.forEach(addProduct);
-    console.log(uniqueProducts);
-}
-
-addFromListButton.addEventListener("click", handleAddProductFromList);
 
 list.addEventListener("click", (event) => {
     const li = event.target.closest("li");
