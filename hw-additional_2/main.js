@@ -59,7 +59,7 @@ function addProduct(name, category) {
 
     currentProducts.push(newProduct);
 
-    renderProducts(currentProducts);
+    renderProducts(currentProducts, list);
 }
 
 function showAllProducts() {
