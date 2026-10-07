@@ -1,4 +1,4 @@
-import {renderProducts} from "./hw_add2.js";
+import {renderProducts, toggleProduct} from "./hw_add2.js";
 
 const app = document.querySelector("#app");
 
@@ -96,7 +96,9 @@ list.addEventListener("click", (event) => {
         return
 
     }
-    event.target.classList.toggle("bought");
+
+    const id = Number(li.dataset.id);
+    toggleProduct(products, id, list);
 });
 
 
