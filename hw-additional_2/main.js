@@ -1,4 +1,5 @@
 import {renderProducts, toggleProduct} from "./hw_add2.js";
+import {createUI} from "./ui.js";
 
 const app = document.querySelector("#app");
 
@@ -29,29 +30,11 @@ const products = [
     }
 ];
 
-function createUI(app) {
-    const title = document.createElement("h1");
-    title.textContent = "Список продуктов";
-    app.append(title); //добавить в  DOM после элемента,  prepend - перед элементом
-    const form = document.createElement("form");
-    const input = document.createElement("input");
-    input.type = "text"; //НЕ ОБЯЗАТЕЛЬНО - ЭТО ДЕФОЛТНОЕ ЗНАЧЕНИЕ
-    input.placeholder = "Введите продукт";
-    const categoryInput = document.createElement("input");
-    categoryInput.type = "text";
-    categoryInput.placeholder = "Категория";
-    const button = document.createElement("button");
-    button.type = "submit";
-    button.textContent = "Добавить";
 
 
-    form.append(input,  categoryInput, button);
-    const list = document.createElement("ul");
-    app.append(form, list);
-    return {form, input, list,  categoryInput};
-}
-
-const {form, input, list,  categoryInput, addFromListButton} = createUI(app);
+const {form, input, list,  categoryInput, filterAllButton,
+    filterNeedButton,
+    filterBoughtButton} = createUI(app);
 
 
 
