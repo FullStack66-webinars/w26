@@ -80,6 +80,30 @@ filterAllButton.addEventListener(
     showAllProducts
 );
 
+filterNeedButton.addEventListener(
+    "click",
+    showNeedProducts
+);
+
+function showNeedProducts() {
+    const filteredProducts =
+        products.filter(product => !product.bought);
+
+    renderProducts(filteredProducts, list);
+}
+
+function showBoughtProducts() {
+    const filteredProducts =
+        products.filter(product => product.bought);
+
+    renderProducts(filteredProducts, list);
+}
+
+filterBoughtButton.addEventListener(
+    "click",
+    showBoughtProducts
+);
+
 list.addEventListener("click", (event) => {
     const li = event.target.closest("li");
     if (!li || !list.contains(li)) {
