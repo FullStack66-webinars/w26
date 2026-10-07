@@ -1,36 +1,16 @@
-import {cancelDraft, createDraft, renderProducts, saveDraft, toggleProduct} from "./hw_add2.js";
-import {createUI} from "./ui.js";
+import {
+    products,
+    getCurrentProducts,
+    cancelDraft,
+    createDraft,
+    renderProducts,
+    saveDraft,
+    toggleProduct
+} from "./hw_add2.js";import {createUI} from "./ui.js";
 
 const app = document.querySelector("#app");
 
-export const products = [
-    {
-        id: 1,
-        name: "Молоко",
-        category: "Молочные продукты",
-        bought: false
-    },
-    {
-        id: 2,
-        name: "Хлеб",
-        category: "Выпечка",
-        bought: true
-    },
-    {
-        id: 3,
-        name: "Сыр",
-        category: "Молочные продукты",
-        bought: false
-    },
-    {
-        id: 4,
-        name: "Яблоки",
-        category: "Фрукты",
-        bought: false
-    }
-];
 
-export let draftProducts = null;
 
 const {form, input, list,  categoryInput, filterAllButton,
     filterNeedButton,
@@ -123,7 +103,7 @@ list.addEventListener("click", (event) => {
     }
 
     const id = Number(li.dataset.id);
-    toggleProduct(products, id, list);
+    toggleProduct( id, list);
 });
 
 
@@ -141,17 +121,17 @@ form.addEventListener("submit", handleSubmit);
 
 createDraftButton.addEventListener(
     "click",
-    createDraft
+    () => createDraft(list)
 );
 
 saveDraftButton.addEventListener(
     "click",
-    saveDraft
+    () => saveDraft(list)
 );
 
 cancelDraftButton.addEventListener(
     "click",
-    cancelDraft
+    () => cancelDraft(list)
 );
 
 
