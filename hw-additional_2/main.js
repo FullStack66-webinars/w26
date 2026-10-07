@@ -61,17 +61,31 @@ function normalizeProductName(productName) {
 
 function hasProduct(productName) {
     const normalizedName = normalizeProductName(productName);
-    return products.some(product => normalizeProductName(product) === normalizedName)
+    return products.some(product => normalizeProductName(product.name) === normalizedName)
 }
 
-function addProduct(productName) {
-    if (hasProduct(productName) || !productName) {
-        return
+function addProduct(name, category) {
+    const cleanName = name.trim();
+    const cleanCategory = category.trim();
+
+    if (
+        !cleanName ||
+        !cleanCategory ||
+        hasProduct(cleanName)
+    ) {
+        return;
     }
-    products.push(productName);
-    const li = document.createElement("li");
-    li.textContent = productName;
-    list.append(li);
+
+    const newProduct = {
+        id: Date.now(),
+        name: cleanName,
+        category: cleanCategory,
+        bought: false
+    };
+
+    products.push(newProduct);
+
+    renderProducts(products, list);
 }
 
 
@@ -89,7 +103,8 @@ list.addEventListener("click", (event) => {
 function handleSubmit(e) {
     e.preventDefault();
     const productName = input.value.trim();
-    addProduct(productName);
+    const category = categoryInput.value.trim();
+    addProduct(productName, category);
     input.value = "";
     input.focus();
 }
