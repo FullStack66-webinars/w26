@@ -1,3 +1,5 @@
+import {draftProducts, products} from "./main.js";
+
 export function renderProducts(productsToRender, list) {
     list.replaceChildren();
 
@@ -17,8 +19,9 @@ export function renderProducts(productsToRender, list) {
     });
 }
 
-export function toggleProduct(products, id, list) {
-    const product = products.find(
+export function toggleProduct( id, list) {
+    const actualProducts = getCurrentProducts();
+    const product = actualProducts.find(
         product => product.id === id
     );
 
@@ -28,5 +31,39 @@ export function toggleProduct(products, id, list) {
 
     product.bought = !product.bought;
 
-    renderProducts(products, list);
+    renderProducts(actualProducts, list);
+}
+
+function getCurrentProducts() {
+    return draftProducts ?? products;
+}
+
+export function createDraft() {
+    draftProducts = structuredClone(products);
+    renderProducts(draftProducts);
+}
+
+export function saveDraft() {
+    if (!draftProducts) {
+        return;
+    }
+
+    products.splice(
+        0,
+        products.length,
+        ...draftProducts
+    );
+
+    draftProducts = null;
+
+    renderProducts(products);
+}
+export function cancelDraft() {
+    if (!draftProducts) {
+        return;
+    }
+
+    draftProducts = null;
+
+    renderProducts(products);
 }

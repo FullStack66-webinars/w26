@@ -34,10 +34,24 @@ export function createUI(app) {
 
     form.append(input,  categoryInput, button);
     const list = document.createElement("ul");
-    app.append(form, list, filters);
+    const createDraftButton = document.createElement("button");
+    createDraftButton.type = "button";
+    createDraftButton.textContent = "Создать черновик";
+
+    const saveDraftButton = document.createElement("button");
+    saveDraftButton.type = "button";
+    saveDraftButton.textContent = "Сохранить изменения";
+
+    const cancelDraftButton = document.createElement("button");
+    cancelDraftButton.type = "button";
+    cancelDraftButton.textContent = "Отменить изменения";
+    app.append(form, list, filters, createDraftButton, saveDraftButton, cancelDraftButton);
     return {form, input, list,  categoryInput,
         filterAllButton,
         filterNeedButton,
-        filterBoughtButton
+        filterBoughtButton,
+        createDraftButton,
+        saveDraftButton,
+        cancelDraftButton,
     };
 }

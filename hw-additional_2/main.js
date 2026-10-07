@@ -1,9 +1,9 @@
-import {renderProducts, toggleProduct} from "./hw_add2.js";
+import {cancelDraft, createDraft, renderProducts, saveDraft, toggleProduct} from "./hw_add2.js";
 import {createUI} from "./ui.js";
 
 const app = document.querySelector("#app");
 
-const products = [
+export const products = [
     {
         id: 1,
         name: "Молоко",
@@ -30,11 +30,14 @@ const products = [
     }
 ];
 
-
+export let draftProducts = null;
 
 const {form, input, list,  categoryInput, filterAllButton,
     filterNeedButton,
-    filterBoughtButton} = createUI(app);
+    filterBoughtButton,
+    createDraftButton,
+    saveDraftButton,
+    cancelDraftButton} = createUI(app);
 
 
 
@@ -42,20 +45,28 @@ function normalizeProductName(productName) {
     return productName.trim().toLowerCase();
 }
 
-function hasProduct(productName) {
-    const normalizedName = normalizeProductName(productName);
-    return products.some(product => normalizeProductName(product.name) === normalizedName)
+function hasProduct(productName, productsToCheck) {
+    const normalizedName =
+        normalizeProductName(productName);
+
+    return productsToCheck.some(
+        product =>
+            normalizeProductName(product.name) ===
+            normalizedName
+    );
 }
 
 function addProduct(name, category) {
     const cleanName = name.trim();
     const cleanCategory = category.trim();
 
-    if (
-        !cleanName ||
-        !cleanCategory ||
-        hasProduct(cleanName)
-    ) {
+    if (!cleanName || !cleanCategory) {
+        return;
+    }
+
+    const currentProducts = getCurrentProducts();
+
+    if (hasProduct(cleanName, currentProducts)) {
         return;
     }
 
@@ -66,9 +77,9 @@ function addProduct(name, category) {
         bought: false
     };
 
-    products.push(newProduct);
+    currentProducts.push(newProduct);
 
-    renderProducts(products, list);
+    renderProducts(currentProducts);
 }
 
 function showAllProducts() {
@@ -127,6 +138,21 @@ function handleSubmit(e) {
 
 //addEventListener
 form.addEventListener("submit", handleSubmit);
+
+createDraftButton.addEventListener(
+    "click",
+    createDraft
+);
+
+saveDraftButton.addEventListener(
+    "click",
+    saveDraft
+);
+
+cancelDraftButton.addEventListener(
+    "click",
+    cancelDraft
+);
 
 
 
