@@ -55,3 +55,29 @@ export function createUI(app) {
         cancelDraftButton,
     };
 }
+
+export function renderProducts(productsToRender, list) {
+    list.replaceChildren();
+
+    productsToRender.forEach(product => {
+        const li = document.createElement("li");
+
+        li.dataset.id = product.id;
+
+        li.textContent =
+            `${product.name} — ${product.category}`;
+
+        if (product.bought) {
+            li.classList.add("bought");
+        }
+        const infoButton = document.createElement("button");
+        infoButton.type = "button";
+        infoButton.textContent = "Show information";
+        li.append(infoButton);
+        infoButton.addEventListener("click", (e) => {
+            console.log("clicked");
+            e.stopPropagation();
+        })
+        list.append(li);
+    });
+}
