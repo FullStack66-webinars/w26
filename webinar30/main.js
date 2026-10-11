@@ -1,4 +1,5 @@
 import {
+    draftProducts,
     addProduct,
     cancelDraft,
     createDraft,
@@ -6,19 +7,29 @@ import {
     toggleProduct
 } from "./products.js";
 
-import {createUI, renderProducts} from "./ui.js";
+import {
+    createUI,
+    renderProducts,
+    updateMode
+} from "./ui.js";
 import {getCurrentProducts} from "./utils.js";
 
 const app = document.querySelector("#app");
 
-console.log(app);
-
-const {form, input, list,  categoryInput, filterAllButton,
+const ui = createUI(app);
+const {
+    form,
+    input,
+    list,
+    categoryInput,
+    message,
+    filterAllButton,
     filterNeedButton,
     filterBoughtButton,
     createDraftButton,
     saveDraftButton,
-    cancelDraftButton} = createUI(app);
+    cancelDraftButton
+} = ui;
 
 let activeFilter = "all";
 
@@ -35,8 +46,12 @@ function render(){
             product => product.bought
         )
     }
-
     renderProducts(visibleProducts, list);
+    updateMode(
+        ui,
+        draftProducts !== null,
+        activeFilter
+    );
 }
 
 
@@ -66,7 +81,7 @@ filterBoughtButton.addEventListener(
 );
 
 list.addEventListener("click", (event) => {
-    const li = event.target.closest("li");
+    const li = event.target.closest("li[data-id]");
     if (!li || !list.contains(li)) {
         return
 
@@ -78,47 +93,55 @@ list.addEventListener("click", (event) => {
 });
 
 
-function handleSubmit(e) {
-    e.preventDefault();
+
+function handleSubmit(event) {
+    event.preventDefault();
+
     const productName = input.value.trim();
     const category = categoryInput.value.trim();
+
     const added = addProduct(productName, category);
+
     if (!added) {
-        console.log("Product was not added!");
+        message.textContent =
+            "Заполните оба поля. Название продукта не должно повторяться.";
+
+        return;
     }
+
+    // Успешное добавление
+    message.textContent = "";
+
     input.value = "";
+    categoryInput.value = "";
+
     input.focus();
+
     render();
 }
+
 
 //addEventListener
 form.addEventListener("submit", handleSubmit);
 
-createDraftButton.addEventListener(
-    "click",
-    () => {
-        createDraft();
-        render();
-    }
-);
+createDraftButton.addEventListener("click", () => {
+    createDraft();
+    message.textContent = "";
+    render();
+});
 
-saveDraftButton.addEventListener(
-    "click",
-    () => {
-        saveDraft(list)
-        render();
-}
-);
+saveDraftButton.addEventListener("click", () => {
+    saveDraft();
+    message.textContent = "";
+    render();
+});
 
-cancelDraftButton.addEventListener(
-    "click",
-    () => {
-        cancelDraft(list);
-        render();
-    }
-);
+cancelDraftButton.addEventListener("click", () => {
+    cancelDraft();
+    message.textContent = "";
+    render();
+});
 
-render();
 
 
 
